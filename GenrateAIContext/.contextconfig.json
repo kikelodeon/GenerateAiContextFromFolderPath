@@ -1,0 +1,5 @@
+﻿{
+  "excludedFolders": [ "bin", "obj", ".git", ".vs", "TestData" ],
+  "excludedExtensions": [ ".exe", ".dll", ".pdb", ".png", ".jpg", ".user", ".suo" ],
+  "outputFileName": "AIContext.txt"
+}

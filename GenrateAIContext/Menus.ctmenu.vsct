@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
+
+	<!-- 1) Referencias internas de Visual Studio -->
+	<Extern href="stdidcmd.h"/>
+	<Extern href="vsshlids.h"/>
+	<Include href="KnownImageIds.vsct"/>
+
+	<!-- 2) Comandos, grupos y botones -->
+	<Commands package="GenrateAIContext">
+		<Groups>
+			<Group guid="GenrateAIContext" id="MyMenuGroup" priority="0x0600">
+				<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+			</Group>
+		</Groups>
+		<Buttons>
+			<Button guid="GenrateAIContext" id="MyCommand" priority="0x0100" type="Button">
+				<Parent guid="GenrateAIContext" id="MyMenuGroup"/>
+
+				<!-- Aquí referenciamos el icono definido más abajo -->
+				<Icon guid="GenrateAIContext" id="GenerateIcon"/>
+
+				<Strings>
+					<ButtonText>Generar Contexto IA…</ButtonText>
+					<LocCanonicalName>.GenrateAIContext.MyCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+		</Buttons>
+	</Commands>
+
+	<!-- 3) Dónde aparece en el menú -->
+	<CommandPlacements>
+		<CommandPlacement guid="GenrateAIContext" id="MyCommand" priority="0x0100">
+			<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+		</CommandPlacement>
+	</CommandPlacements>
+
+	<!-- 4) Símbolos e imágenes -->
+	<Symbols>
+		<GuidSymbol name="GenrateAIContext" value="{c27c8469-d722-43f4-8fcf-2d130fb5a0ac}">
+			<IDSymbol name="MyMenuGroup"  value="0x0001"/>
+			<IDSymbol name="MyCommand"    value="0x0100"/>
+			<IDSymbol name="GenerateIcon" value="0x0101"/>
+
+			<!-- Definimos aquí la imagen PNG -->
+	
+		</GuidSymbol>
+	</Symbols>
+
+</CommandTable>

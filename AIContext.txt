@@ -1,0 +1,634 @@
+﻿### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext.sln
+
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36121.58 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenrateAIContext", "GenrateAIContext\GenrateAIContext.csproj", "{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|arm64 = Debug|arm64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|arm64 = Release|arm64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Debug|arm64.ActiveCfg = Debug|arm64
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Debug|arm64.Build.0 = Debug|arm64
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Debug|x86.ActiveCfg = Debug|x86
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Debug|x86.Build.0 = Debug|x86
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Release|arm64.ActiveCfg = Release|arm64
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Release|arm64.Build.0 = Release|arm64
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Release|x86.ActiveCfg = Release|x86
+		{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5C70C483-411C-4198-BF08-E8C2E6D09B59}
+	EndGlobalSection
+EndGlobal
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\.contextconfig.json
+
+{
+  "excludedFolders": [ "bin", "obj", ".git", ".vs", "TestData" ],
+  "excludedExtensions": [ ".exe", ".dll", ".pdb", ".png", ".jpg", ".user", ".suo" ],
+  "outputFileName": "AIContext.txt"
+}
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\ConfigForm.cs
+
+using System;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace GenrateAIContext
+{
+    internal class ConfigForm : Form
+    {
+        private TextBox txtRoot, txtExclude, txtOutput;
+        private Button btnGenerate, btnCancel;
+
+        public ConfigForm(string rootPath)
+        {
+            Text = "Configurar Generar Contexto IA";
+            StartPosition = FormStartPosition.CenterParent;
+            Width = 450; Height = 200;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false; MinimizeBox = false;
+
+            // Controles
+            Controls.Add(new Label { Text = "Carpeta raíz:", Left = 10, Top = 20 });
+            txtRoot = new TextBox { Left = 120, Top = 18, Width = 300, Text = rootPath };
+            Controls.Add(txtRoot);
+
+            Controls.Add(new Label { Text = "Excluir (carpetas):", Left = 10, Top = 60 });
+            txtExclude = new TextBox { Left = 120, Top = 58, Width = 300, Text = "bin,obj,.git,.vs,TestData" };
+            Controls.Add(txtExclude);
+
+            Controls.Add(new Label { Text = "Archivo salida:", Left = 10, Top = 100 });
+            txtOutput = new TextBox { Left = 120, Top = 98, Width = 300, Text = "AIContext.txt" };
+            Controls.Add(txtOutput);
+
+            btnCancel = new Button { Text = "Cancelar", Left = 240, Top = 140, Width = 75, DialogResult = DialogResult.Cancel };
+            btnGenerate = new Button { Text = "Generar", Left = 330, Top = 140, Width = 75 };
+            btnGenerate.Click += Generate_Click;
+
+            Controls.AddRange(new Control[] { btnCancel, btnGenerate });
+            AcceptButton = btnGenerate; CancelButton = btnCancel;
+        }
+
+        private void Generate_Click(object s, EventArgs e)
+        {
+            var root = txtRoot.Text.Trim();
+            if (!Directory.Exists(root))
+            {
+                MessageBox.Show("La carpeta raíz no existe.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Lee config.json o usa TextBox
+            var config = ContextConfigLoader.LoadConfig(root);
+            var exFolders = (txtExclude.Text.Split(',').Where(x => x != "").ToArray())
+                            .Concat(config.ExcludedFolders).ToArray();
+            var exExts = config.ExcludedExtensions;
+            var outFile = string.IsNullOrWhiteSpace(txtOutput.Text)
+                            ? config.OutputFileName
+                            : txtOutput.Text.Trim();
+
+            // Genera
+            ContextGenerator.GenerateContext(root, exFolders, exExts, outFile);
+
+            MessageBox.Show($"Generado:\n{Path.Combine(root, outFile)}",
+                            "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Close();
+        }
+    }
+}
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\ContextConfig.cs
+
+using System;
+
+namespace GenrateAIContext
+{
+    public class ContextConfig
+    {
+        public string[] ExcludedFolders { get; set; } = Array.Empty<string>();
+        public string[] ExcludedExtensions { get; set; } = Array.Empty<string>();
+        public string OutputFileName { get; set; } = "ProjectContext.txt";
+    }
+}
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\ContextConfigLoader.cs
+
+using System.IO;
+using Newtonsoft.Json;
+
+namespace GenrateAIContext
+{
+    public static class ContextConfigLoader
+    {
+        public static ContextConfig LoadConfig(string baseFolder)
+        {
+            var cfg = Path.Combine(baseFolder, ".contextconfig.json");
+            if (File.Exists(cfg))
+                return JsonConvert.DeserializeObject<ContextConfig>(File.ReadAllText(cfg))
+                       ?? new ContextConfig();
+            return new ContextConfig();
+        }
+    }
+}
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\ContextGenerator.cs
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace GenrateAIContext
+{
+    public static class ContextGenerator
+    {
+        public static void GenerateContext(
+            string baseFolder,
+            string[] excludedFolders,
+            string[] excludedExtensions,
+            string outputFileName)
+        {
+            var exF = new HashSet<string>(excludedFolders, StringComparer.OrdinalIgnoreCase);
+            var exE = new HashSet<string>(excludedExtensions, StringComparer.OrdinalIgnoreCase);
+            var outPath = Path.Combine(baseFolder, outputFileName);
+            var files = Directory
+                .EnumerateFiles(baseFolder, "*.*", SearchOption.AllDirectories)
+                .Where(f =>
+                    !PathHelpers.GetRelativePath(baseFolder, f)
+                                .Split(Path.DirectorySeparatorChar)
+                                .Any(seg => exF.Contains(seg)) &&
+                    !exE.Contains(Path.GetExtension(f)))
+                .OrderBy(f => f)
+                .ToList();
+
+            using var w = new StreamWriter(outPath, false, Encoding.UTF8);
+            var tree = new List<string>();
+            foreach (var f in files)
+            {
+                w.WriteLine($"### {f}\n");
+                w.WriteLine(File.ReadAllText(f));
+                w.WriteLine("\n-----\n");
+                tree.Add(PathHelpers.GetRelativePath(baseFolder, f));
+            }
+            w.WriteLine("### Árbol:");
+            foreach (var line in tree)
+                w.WriteLine(line);
+        }
+    }
+}
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\GenrateAIContext.csproj
+
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GenrateAIContext</RootNamespace>
+    <AssemblyName>GenrateAIContext</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <UseCodebase>true</UseCodebase>
+    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+    <StartAction>Program</StartAction>
+    <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContextConfig.cs" />
+    <Compile Include="ContextConfigLoader.cs" />
+    <Compile Include="PathHelpers.cs" />
+    <Compile Include="ContextGenerator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GenrateAIContextPackage.cs" />
+    <Compile Include="source.extension.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+    </Compile>
+    <Compile Include="Menus.ctmenu.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Menus.ctmenu.vsct</DependentUpon>
+    </Compile>
+    <Compile Include="WindowWrapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".contextconfig.json" />
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+      <Generator>VsixManifestGenerator</Generator>
+      <LastGenOutput>source.extension.cs</LastGenOutput>
+    </None>
+    <Content Include="Resources\Icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <VSCTCompile Include="Menus.ctmenu.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <Generator>VsctGenerator</Generator>
+      <LastGenOutput>Menus.ctmenu.cs</LastGenOutput>
+    </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Community.VisualStudio.VSCT" Version="16.0.29.6" PrivateAssets="all" />
+    <PackageReference Include="Community.VisualStudio.Toolkit.17" Version="17.0.451" ExcludeAssets="Runtime" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\GenrateAIContextPackage.cs
+
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Task = System.Threading.Tasks.Task;
+using System.ComponentModel.Design;
+
+namespace GenrateAIContext
+{
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+    [InstalledProductRegistration("Generar Contexto IA", "Dialogo de configuración", "1.0")]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
+    [Guid("c27c8469-d722-43f4-8fcf-2d130fb5a0ac")]
+    public sealed class GenrateAIContextPackage : AsyncPackage
+    {
+        protected override async Task InitializeAsync(
+            CancellationToken ct, IProgress<ServiceProgressData> progress)
+        {
+            await JoinableTaskFactory.SwitchToMainThreadAsync(ct);
+            var mcs = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            var cmdId = new CommandID(
+                new Guid("c27c8469-d722-43f4-8fcf-2d130fb5a0ac"), 0x0100);
+            var menu = new MenuCommand((s, e) => ShowConfig(), cmdId);
+            mcs.AddCommand(menu);
+        }
+
+        private async void ShowConfig()
+        {
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
+            // Obtener owner HWND
+            var uiShell = await GetServiceAsync(typeof(SVsUIShell)) as IVsUIShell;
+            uiShell.GetDialogOwnerHwnd(out IntPtr hwndOwner);
+
+            // Default desde .contextconfig.json en la raíz de la solución
+            var dte = (EnvDTE.DTE)await GetServiceAsync(typeof(EnvDTE.DTE));
+            var root = Path.GetDirectoryName(dte.Solution.FullName);
+
+            // Mostrar formulario
+            using var form = new ConfigForm(root);
+            if (hwndOwner != IntPtr.Zero)
+                form.ShowDialog(new WindowWrapper(hwndOwner));
+            else
+                form.ShowDialog();
+        }
+    }
+}
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\Menus.ctmenu.cs
+
+// ------------------------------------------------------------------------------
+// <auto-generated>
+//     This file was generated by the free extension VSIX Synchronizer
+// </auto-generated>
+// ------------------------------------------------------------------------------
+using System;
+
+namespace GenrateAIContext
+{
+    /// <summary>
+    /// Helper class that exposes all GUIDs used across VS Package.
+    /// </summary>
+    internal sealed partial class PackageGuids
+    {
+        public const string GenrateAIContextString = "c27c8469-d722-43f4-8fcf-2d130fb5a0ac";
+        public static Guid GenrateAIContext = new Guid(GenrateAIContextString);
+    }
+    /// <summary>
+    /// Helper class that encapsulates all CommandIDs uses across VS Package.
+    /// </summary>
+    internal sealed partial class PackageIds
+    {
+        public const int MyMenuGroup = 0x0001;
+        public const int MyCommand = 0x0100;
+    }
+}
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\Menus.ctmenu.vsct
+
+<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
+	<Extern href="stdidcmd.h"/>
+	<Extern href="vsshlids.h"/>
+	<Include href="KnownImageIds.vsct"/>
+
+	<Commands package="GenrateAIContext">
+		<Groups>
+			<Group guid="GenrateAIContext" id="MyMenuGroup" priority="0x0600">
+				<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+			</Group>
+		</Groups>
+		<Buttons>
+			<Button guid="GenrateAIContext" id="MyCommand" priority="0x0100" type="Button">
+				<Parent guid="GenrateAIContext" id="MyMenuGroup"/>
+				<Icon guid="ImageCatalogGuid" id="StatusInformation"/>
+				<Strings>
+					<ButtonText>Generar Contexto IA…</ButtonText>
+					<LocCanonicalName>.GenrateAIContext.MyCommand</LocCanonicalName>
+				</Strings>
+			</Button>
+		</Buttons>
+	</Commands>
+
+	<CommandPlacements>
+		<CommandPlacement guid="GenrateAIContext" id="MyCommand" priority="0x0100">
+			<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+		</CommandPlacement>
+	</CommandPlacements>
+
+	<Symbols>
+		<GuidSymbol name="GenrateAIContext" value="{c27c8469-d722-43f4-8fcf-2d130fb5a0ac}">
+			<IDSymbol name="MyMenuGroup" value="0x0001"/>
+			<IDSymbol name="MyCommand"     value="0x0100"/>
+		</GuidSymbol>
+	</Symbols>
+</CommandTable>
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\PathHelpers.cs
+
+using System;
+using System.IO;
+
+namespace GenrateAIContext
+{
+    internal static class PathHelpers
+    {
+        public static string GetRelativePath(string basePath, string fullPath)
+        {
+            var bp = basePath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            return Uri.UnescapeDataString(
+                new Uri(bp).MakeRelativeUri(new Uri(fullPath)).ToString())
+                   .Replace('/', Path.DirectorySeparatorChar);
+        }
+    }
+}
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\Properties\AssemblyInfo.cs
+
+using GenrateAIContext;
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+[assembly: AssemblyTitle(Vsix.Name)]
+[assembly: AssemblyDescription(Vsix.Description)]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany(Vsix.Author)]
+[assembly: AssemblyProduct(Vsix.Name)]
+[assembly: AssemblyCopyright(Vsix.Author)]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+[assembly: ComVisible(false)]
+
+[assembly: AssemblyVersion(Vsix.Version)]
+[assembly: AssemblyFileVersion(Vsix.Version)]
+
+namespace System.Runtime.CompilerServices
+{
+    public class IsExternalInit { }
+}
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\Resources\Icon.png
+
+�PNG
+
+   IHDR   Z   Z   v�0   'PLTEBBB������YYY���������mmm���ppp���SSSEEEj�K'   �IDATx�����PD����v�Vo]�p�\,�k�NQ��N�r�T��V�A��u�2me-�;t4��sg~������O���ȏ�� �+Ӡ�}������|4h��H������4h���h�n�4�hZ{���I��/M�4h�x1�?`�C� ?�1)��    IEND�B`�
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\source.extension.cs
+
+// ------------------------------------------------------------------------------
+// <auto-generated>
+//     This file was generated by the extension VSIX Synchronizer
+// </auto-generated>
+// ------------------------------------------------------------------------------
+namespace GenrateAIContext
+{
+    internal sealed partial class Vsix
+    {
+        public const string Id = "GenrateAIContext.57db8ea2-bbfb-4c85-a80b-e4ba6ee4eca2";
+        public const string Name = "GenrateAIContext";
+        public const string Description = @"Empty VSIX Project.";
+        public const string Language = "en-US";
+        public const string Version = "1.0";
+        public const string Author = "Company";
+        public const string Tags = "";
+    }
+}
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\source.extension.vsixmanifest
+
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0"
+                 xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
+                 xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="kikelodeon.GenerateAIContext"
+              Version="1.6.0"
+              Language="en-US"
+              Publisher="kikelodeon" />
+    <DisplayName>Generate AI Context</DisplayName>
+    <Description xml:space="preserve">
+      Generates a text file containing the entire project context (code and config),
+      with support for folder-and-extension exclusions via .contextconfig.json.
+    </Description>
+    <Icon>Resources\Icon.png</Icon>
+    <PreviewImage>Resources\Preview.png</PreviewImage>
+    <Tags>context,project,vsix</Tags>
+    <MoreInfoUrl>https://github.com/kikelodeon/GenerateAIContext</MoreInfoUrl>
+  </Metadata>
+
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community"
+                        Version="[17.0,18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro"
+                        Version="[17.0,18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise"
+                        Version="[17.0,18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+  </Installation>
+
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.Compiler" Version="[4.0,)" />
+  </Prerequisites>
+
+  <Assets>
+<Asset Type="Microsoft.VisualStudio.VsPackage"
+       d:Source="Project"
+       d:ProjectName="%CurrentProject%"
+       Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+<Asset Type="Microsoft.VisualStudio.Menus"
+       d:Source="File"
+       Path="Menus.ctmenu.vsct" />
+    <Asset Type="Microsoft.VisualStudio.Icon"
+           d:Source="File"
+           Path="Resources\Icon.png" />
+  </Assets>
+</PackageManifest>
+
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\WindowWrapper.cs
+
+using System;
+using System.Windows.Forms;
+
+namespace GenrateAIContext
+{
+    internal class WindowWrapper : IWin32Window
+    {
+        private readonly IntPtr _hwnd;
+        public WindowWrapper(IntPtr hwnd) => _hwnd = hwnd;
+        public IntPtr Handle => _hwnd;
+    }
+}
+
+
+-----
+
+### Árbol:
+GenrateAIContext.sln
+GenrateAIContext\.contextconfig.json
+GenrateAIContext\ConfigForm.cs
+GenrateAIContext\ContextConfig.cs
+GenrateAIContext\ContextConfigLoader.cs
+GenrateAIContext\ContextGenerator.cs
+GenrateAIContext\GenrateAIContext.csproj
+GenrateAIContext\GenrateAIContextPackage.cs
+GenrateAIContext\Menus.ctmenu.cs
+GenrateAIContext\Menus.ctmenu.vsct
+GenrateAIContext\PathHelpers.cs
+GenrateAIContext\Properties\AssemblyInfo.cs
+GenrateAIContext\Resources\Icon.png
+GenrateAIContext\source.extension.cs
+GenrateAIContext\source.extension.vsixmanifest
+GenrateAIContext\WindowWrapper.cs
