@@ -1,0 +1,9 @@
+# Ignore bin and obj folders
+**/bin/
+**/obj/
+# Ignore Production properties
+**/Properties/Production/
+
+# Frontend
+/_Frontend/kronoscape.net/node_modules
+/_Frontend/kronoscape.net/build

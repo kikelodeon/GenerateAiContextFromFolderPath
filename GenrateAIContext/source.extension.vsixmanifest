@@ -2,52 +2,52 @@
 <PackageManifest Version="2.0.0"
                  xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="kikelodeon.GenerateAIContext"
-              Version="1.6.0"
-              Language="en-US"
-              Publisher="kikelodeon" />
-    <DisplayName>Generate AI Context</DisplayName>
-    <Description xml:space="preserve">
+	<Metadata>
+		<Identity Id="kikelodeon.GenerateAIContext"
+                  Version="3.0"
+                  Language="en-US"
+                  Publisher="kikelodeon" />
+		<DisplayName>Generate AI Context</DisplayName>
+		<Description xml:space="preserve">
       Generates a text file containing the entire project context (code and config),
       with support for folder-and-extension exclusions via .contextconfig.json.
     </Description>
-    <Icon>Resources\Icon.png</Icon>
-    <PreviewImage>Resources\Preview.png</PreviewImage>
-    <Tags>context,project,vsix</Tags>
-    <MoreInfoUrl>https://github.com/kikelodeon/GenerateAIContext</MoreInfoUrl>
-  </Metadata>
+		<Icon>Resources\Icon.png</Icon>
+		<PreviewImage>Resources\Preview.png</PreviewImage>
+		<Tags>context,project,vsix</Tags>
+		<MoreInfoUrl>https://github.com/kikelodeon/GenerateAIContext</MoreInfoUrl>
+	</Metadata>
 
-  <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community"
-                        Version="[17.0,18.0)">
-      <ProductArchitecture>amd64</ProductArchitecture>
-    </InstallationTarget>
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro"
-                        Version="[17.0,18.0)">
-      <ProductArchitecture>amd64</ProductArchitecture>
-    </InstallationTarget>
-    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise"
-                        Version="[17.0,18.0)">
-      <ProductArchitecture>amd64</ProductArchitecture>
-    </InstallationTarget>
-  </Installation>
+	<Installation>
+		<InstallationTarget Id="Microsoft.VisualStudio.Community"
+                            Version="[17.0,18.0)">
+			<ProductArchitecture>amd64</ProductArchitecture>
+		</InstallationTarget>
+		<InstallationTarget Id="Microsoft.VisualStudio.Pro"
+                            Version="[17.0,18.0)">
+			<ProductArchitecture>amd64</ProductArchitecture>
+		</InstallationTarget>
+		<InstallationTarget Id="Microsoft.VisualStudio.Enterprise"
+                            Version="[17.0,18.0)">
+			<ProductArchitecture>amd64</ProductArchitecture>
+		</InstallationTarget>
+	</Installation>
 
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" />
-    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.Compiler" Version="[4.0,)" />
-  </Prerequisites>
+	<Prerequisites>
+		<Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" />
+		<Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.Compiler" Version="[4.0,)" />
+	</Prerequisites>
 
-  <Assets>
-<Asset Type="Microsoft.VisualStudio.VsPackage"
-       d:Source="Project"
-       d:ProjectName="%CurrentProject%"
-       Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-<Asset Type="Microsoft.VisualStudio.Menus"
-       d:Source="File"
-       Path="Menus.ctmenu.vsct" />
-    <Asset Type="Microsoft.VisualStudio.Icon"
-           d:Source="File"
-           Path="Resources\Icon.png" />
-  </Assets>
+	<Assets>
+		<Asset Type="Microsoft.VisualStudio.VsPackage"
+               d:Source="Project"
+               d:ProjectName="%CurrentProject%"
+               Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+		<Asset Type="Microsoft.VisualStudio.Menus"
+               d:Source="File"
+               Path="Menus.ctmenu.vsct" />
+		<Asset Type="Microsoft.VisualStudio.Icon"
+               d:Source="File"
+               Path="Resources\Icon.png" />
+	</Assets>
 </PackageManifest>

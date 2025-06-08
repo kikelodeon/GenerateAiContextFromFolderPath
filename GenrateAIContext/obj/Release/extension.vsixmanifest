@@ -1,6 +1,6 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Id="kikelodeon.GenerateAIContext" Version="1.6.0" Language="en-US" Publisher="kikelodeon" />
+    <Identity Id="kikelodeon.GenerateAIContext" Version="3.0" Language="en-US" Publisher="kikelodeon" />
     <DisplayName>Generate AI Context</DisplayName>
     <Description xml:space="preserve">
       Generates a text file containing the entire project context (code and config),

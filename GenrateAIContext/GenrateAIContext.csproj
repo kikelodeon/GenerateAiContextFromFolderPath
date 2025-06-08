@@ -48,8 +48,6 @@
     <Compile Include="ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ContextConfig.cs" />
-    <Compile Include="ContextConfigLoader.cs" />
     <Compile Include="PathHelpers.cs" />
     <Compile Include="ContextGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

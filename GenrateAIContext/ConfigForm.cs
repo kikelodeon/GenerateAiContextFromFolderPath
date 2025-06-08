@@ -146,28 +146,11 @@ namespace GenrateAIContext
 
             // Cargo configuración inicial (o valores por defecto)
             txtRoot.Text = initialRoot;
-            var cfgPath = Path.Combine(initialRoot, ".contextconfig.json");
-            if (File.Exists(cfgPath))
-            {
-                try
-                {
-                    var cfg = JsonConvert
-                        .DeserializeObject<ContextConfig>(File.ReadAllText(cfgPath))
-                        ?? new ContextConfig();
-                    lstExcludedFolders.Items.AddRange(cfg.ExcludedFolders);
-                    lstExcludedExts.Items.AddRange(cfg.ExcludedExtensions);
-                    txtOutput.Text = cfg.OutputFileName;
-                }
-                catch { }
-            }
-            else
-            {
-                new[] { "bin", "obj", ".git", ".vs", "TestData" }
-                    .ToList().ForEach(f => lstExcludedFolders.Items.Add(f));
-                new[] { ".exe", ".dll", ".pdb", ".png", ".jpg", ".user", ".suo" }
-                    .ToList().ForEach(e => lstExcludedExts.Items.Add(e));
-                txtOutput.Text = "AIContext.txt";
-            }
+            new[] { "bin", "obj", ".git", ".vs", "TestData" }
+                .ToList().ForEach(f => lstExcludedFolders.Items.Add(f));
+            new[] { ".exe", ".dll", ".pdb", ".png", ".jpg", ".user", ".suo" }
+                .ToList().ForEach(e => lstExcludedExts.Items.Add(e));
+            txtOutput.Text = "AIContext.txt";
         }
 
         private void Generate_Click(object sender, EventArgs e)
@@ -182,18 +165,6 @@ namespace GenrateAIContext
             var exFolders = lstExcludedFolders.Items.OfType<string>().ToArray();
             var exExts = lstExcludedExts.Items.OfType<string>().ToArray();
             var outFile = txtOutput.Text.Trim();
-
-            // Guardo la configuración
-            var cfg = new ContextConfig
-            {
-                ExcludedFolders = exFolders,
-                ExcludedExtensions = exExts,
-                OutputFileName = outFile
-            };
-            File.WriteAllText(
-                Path.Combine(root, ".contextconfig.json"),
-                JsonConvert.SerializeObject(cfg, Formatting.Indented)
-            );
 
             // Genero el contexto
             ContextGenerator.GenerateContext(root, exFolders, exExts, outFile);

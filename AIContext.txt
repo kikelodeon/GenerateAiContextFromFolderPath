@@ -1,4 +1,28 @@
-﻿### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext.sln
+﻿### C:\Users\kikelo\source\repos\GenrateAIContext\.contextconfig.json
+
+{
+  "ExcludedFolders": [
+    "bin",
+    "obj",
+    ".git",
+    ".vs",
+    "TestData"
+  ],
+  "ExcludedExtensions": [
+    ".exe",
+    ".dll",
+    ".pdb",
+    ".png",
+    ".jpg",
+    ".user",
+    ".suo"
+  ],
+  "OutputFileName": "AIContext.txt"
+}
+
+-----
+
+### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext.sln
 
 
 Microsoft Visual Studio Solution File, Format Version 12.00
@@ -57,45 +81,176 @@ EndGlobal
 using System;
 using System.IO;
 using System.Linq;
+using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 
 namespace GenrateAIContext
 {
-    internal class ConfigForm : Form
+    public class ConfigForm : Form
     {
-        private TextBox txtRoot, txtExclude, txtOutput;
-        private Button btnGenerate, btnCancel;
+        private TextBox txtRoot;
+        private ListBox lstExcludedFolders;
+        private ListBox lstExcludedExts;
+        private TextBox txtOutput;
+        private Button btnGenerate;
+        private Button btnCancel;
 
-        public ConfigForm(string rootPath)
+        public ConfigForm(string initialRoot)
         {
+            // Form básico
             Text = "Configurar Generar Contexto IA";
             StartPosition = FormStartPosition.CenterParent;
-            Width = 450; Height = 200;
+            ClientSize = new Size(600, 480);
             FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false; MinimizeBox = false;
+            MaximizeBox = false;
+            MinimizeBox = false;
 
-            // Controles
-            Controls.Add(new Label { Text = "Carpeta raíz:", Left = 10, Top = 20 });
-            txtRoot = new TextBox { Left = 120, Top = 18, Width = 300, Text = rootPath };
-            Controls.Add(txtRoot);
+            // Panel principal con tabla
+            var main = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                ColumnCount = 3,
+                RowCount = 4,
+                Padding = new Padding(10),
+            };
+            main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));      // etiqueta
+            main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); // control
+            main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));      // botón
 
-            Controls.Add(new Label { Text = "Excluir (carpetas):", Left = 10, Top = 60 });
-            txtExclude = new TextBox { Left = 120, Top = 58, Width = 300, Text = "bin,obj,.git,.vs,TestData" };
-            Controls.Add(txtExclude);
+            // Fila 0: Carpeta raíz
+            main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            main.Controls.Add(new Label { Text = "Carpeta raíz:", Anchor = AnchorStyles.Right, AutoSize = true }, 0, 0);
+            txtRoot = new TextBox { Dock = DockStyle.Fill };
+            var btnBrowseRoot = new Button { Text = "...", AutoSize = true };
+            main.Controls.Add(txtRoot, 1, 0);
+            main.Controls.Add(btnBrowseRoot, 2, 0);
+            btnBrowseRoot.Click += (_, __) =>
+            {
+                using var dlg = new FolderBrowserDialog { SelectedPath = txtRoot.Text };
+                if (dlg.ShowDialog() == DialogResult.OK)
+                    txtRoot.Text = dlg.SelectedPath;
+            };
 
-            Controls.Add(new Label { Text = "Archivo salida:", Left = 10, Top = 100 });
-            txtOutput = new TextBox { Left = 120, Top = 98, Width = 300, Text = "AIContext.txt" };
-            Controls.Add(txtOutput);
+            // Fila 1: Excluir carpetas
+            main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            main.Controls.Add(new Label { Text = "Excluir carpetas:", Anchor = AnchorStyles.Right, AutoSize = true }, 0, 1);
+            lstExcludedFolders = new ListBox { Height = 100, Dock = DockStyle.Fill };
+            var pnlFolderBtns = new FlowLayoutPanel { FlowDirection = FlowDirection.TopDown, AutoSize = true };
+            var btnAddFolder = new Button { Text = "+", AutoSize = true };
+            var btnRemoveFolder = new Button { Text = "–", AutoSize = true };
+            pnlFolderBtns.Controls.AddRange(new Control[] { btnAddFolder, btnRemoveFolder });
+            main.Controls.Add(lstExcludedFolders, 1, 1);
+            main.Controls.Add(pnlFolderBtns, 2, 1);
+            btnAddFolder.Click += (_, __) =>
+            {
+                using var dlg = new FolderBrowserDialog { SelectedPath = txtRoot.Text };
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    var rel = PathHelpers.GetRelativePath(txtRoot.Text, dlg.SelectedPath);
+                    if (!lstExcludedFolders.Items.Contains(rel))
+                        lstExcludedFolders.Items.Add(rel);
+                }
+            };
+            btnRemoveFolder.Click += (_, __) =>
+            {
+                if (lstExcludedFolders.SelectedItem != null)
+                    lstExcludedFolders.Items.Remove(lstExcludedFolders.SelectedItem);
+            };
 
-            btnCancel = new Button { Text = "Cancelar", Left = 240, Top = 140, Width = 75, DialogResult = DialogResult.Cancel };
-            btnGenerate = new Button { Text = "Generar", Left = 330, Top = 140, Width = 75 };
+            // Fila 2: Excluir extensiones
+            main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            main.Controls.Add(new Label { Text = "Excluir extensiones:", Anchor = AnchorStyles.Right, AutoSize = true }, 0, 2);
+            lstExcludedExts = new ListBox { Height = 100, Dock = DockStyle.Fill };
+            var pnlExtBtns = new FlowLayoutPanel { FlowDirection = FlowDirection.TopDown, AutoSize = true };
+            var btnAddExt = new Button { Text = "+", AutoSize = true };
+            var btnRemoveExt = new Button { Text = "–", AutoSize = true };
+            pnlExtBtns.Controls.AddRange(new Control[] { btnAddExt, btnRemoveExt });
+            main.Controls.Add(lstExcludedExts, 1, 2);
+            main.Controls.Add(pnlExtBtns, 2, 2);
+            btnAddExt.Click += (_, __) =>
+            {
+                var ext = Interaction.InputBox(
+                    "Extensión (incluye el punto):", "Agregar Extensión", ".log"
+                ).Trim();
+                if (!string.IsNullOrEmpty(ext))
+                {
+                    if (!ext.StartsWith(".")) ext = "." + ext;
+                    if (!lstExcludedExts.Items.Contains(ext))
+                        lstExcludedExts.Items.Add(ext);
+                }
+            };
+            btnRemoveExt.Click += (_, __) =>
+            {
+                if (lstExcludedExts.SelectedItem != null)
+                    lstExcludedExts.Items.Remove(lstExcludedExts.SelectedItem);
+            };
+
+            // Fila 3: Archivo de salida
+            main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            main.Controls.Add(new Label { Text = "Archivo salida:", Anchor = AnchorStyles.Right, AutoSize = true }, 0, 3);
+            txtOutput = new TextBox { Dock = DockStyle.Fill };
+            var btnBrowseOut = new Button { Text = "...", AutoSize = true };
+            main.Controls.Add(txtOutput, 1, 3);
+            main.Controls.Add(btnBrowseOut, 2, 3);
+            btnBrowseOut.Click += (_, __) =>
+            {
+                using var dlg = new SaveFileDialog
+                {
+                    InitialDirectory = txtRoot.Text,
+                    FileName = txtOutput.Text,
+                    Filter = "Text files|*.txt|All files|*.*"
+                };
+                if (dlg.ShowDialog() == DialogResult.OK)
+                    txtOutput.Text = Path.GetFileName(dlg.FileName);
+            };
+
+            Controls.Add(main);
+
+            // Panel inferior con botones
+            var bottom = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Bottom,
+                FlowDirection = FlowDirection.RightToLeft,
+                Padding = new Padding(10),
+                AutoSize = true
+            };
+            btnCancel = new Button { Text = "Cancelar", AutoSize = true, DialogResult = DialogResult.Cancel };
+            btnGenerate = new Button { Text = "Generar", AutoSize = true };
             btnGenerate.Click += Generate_Click;
+            bottom.Controls.Add(btnCancel);
+            bottom.Controls.Add(btnGenerate);
+            Controls.Add(bottom);
 
-            Controls.AddRange(new Control[] { btnCancel, btnGenerate });
-            AcceptButton = btnGenerate; CancelButton = btnCancel;
+            // Cargo configuración inicial (o valores por defecto)
+            txtRoot.Text = initialRoot;
+            var cfgPath = Path.Combine(initialRoot, ".contextconfig.json");
+            if (File.Exists(cfgPath))
+            {
+                try
+                {
+                    var cfg = JsonConvert
+                        .DeserializeObject<ContextConfig>(File.ReadAllText(cfgPath))
+                        ?? new ContextConfig();
+                    lstExcludedFolders.Items.AddRange(cfg.ExcludedFolders);
+                    lstExcludedExts.Items.AddRange(cfg.ExcludedExtensions);
+                    txtOutput.Text = cfg.OutputFileName;
+                }
+                catch { }
+            }
+            else
+            {
+                new[] { "bin", "obj", ".git", ".vs", "TestData" }
+                    .ToList().ForEach(f => lstExcludedFolders.Items.Add(f));
+                new[] { ".exe", ".dll", ".pdb", ".png", ".jpg", ".user", ".suo" }
+                    .ToList().ForEach(e => lstExcludedExts.Items.Add(e));
+                txtOutput.Text = "AIContext.txt";
+            }
         }
 
-        private void Generate_Click(object s, EventArgs e)
+        private void Generate_Click(object sender, EventArgs e)
         {
             var root = txtRoot.Text.Trim();
             if (!Directory.Exists(root))
@@ -104,19 +259,26 @@ namespace GenrateAIContext
                 return;
             }
 
-            // Lee config.json o usa TextBox
-            var config = ContextConfigLoader.LoadConfig(root);
-            var exFolders = (txtExclude.Text.Split(',').Where(x => x != "").ToArray())
-                            .Concat(config.ExcludedFolders).ToArray();
-            var exExts = config.ExcludedExtensions;
-            var outFile = string.IsNullOrWhiteSpace(txtOutput.Text)
-                            ? config.OutputFileName
-                            : txtOutput.Text.Trim();
+            var exFolders = lstExcludedFolders.Items.OfType<string>().ToArray();
+            var exExts = lstExcludedExts.Items.OfType<string>().ToArray();
+            var outFile = txtOutput.Text.Trim();
 
-            // Genera
+            // Guardo la configuración
+            var cfg = new ContextConfig
+            {
+                ExcludedFolders = exFolders,
+                ExcludedExtensions = exExts,
+                OutputFileName = outFile
+            };
+            File.WriteAllText(
+                Path.Combine(root, ".contextconfig.json"),
+                JsonConvert.SerializeObject(cfg, Formatting.Indented)
+            );
+
+            // Genero el contexto
             ContextGenerator.GenerateContext(root, exFolders, exExts, outFile);
 
-            MessageBox.Show($"Generado:\n{Path.Combine(root, outFile)}",
+            MessageBox.Show($"Contexto generado en:\n{Path.Combine(root, outFile)}",
                             "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
         }
@@ -184,31 +346,59 @@ namespace GenrateAIContext
             string[] excludedExtensions,
             string outputFileName)
         {
+            // Rutas
+            var outPath = Path.Combine(baseFolder, outputFileName);
+            var outFullPath = Path.GetFullPath(outPath);
+
+            // 1) Enumerar y filtrar
             var exF = new HashSet<string>(excludedFolders, StringComparer.OrdinalIgnoreCase);
             var exE = new HashSet<string>(excludedExtensions, StringComparer.OrdinalIgnoreCase);
-            var outPath = Path.Combine(baseFolder, outputFileName);
+
             var files = Directory
                 .EnumerateFiles(baseFolder, "*.*", SearchOption.AllDirectories)
+                // excluyo carpetas
                 .Where(f =>
                     !PathHelpers.GetRelativePath(baseFolder, f)
                                 .Split(Path.DirectorySeparatorChar)
-                                .Any(seg => exF.Contains(seg)) &&
-                    !exE.Contains(Path.GetExtension(f)))
+                                .Any(seg => exF.Contains(seg)))
+                // excluyo extensiones
+                .Where(f => !exE.Contains(Path.GetExtension(f)))
+                // excluyo *exactamente* el archivo de salida
+                .Where(f => !string.Equals(Path.GetFullPath(f), outFullPath, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(f => f)
                 .ToList();
 
-            using var w = new StreamWriter(outPath, false, Encoding.UTF8);
-            var tree = new List<string>();
-            foreach (var f in files)
+            // 2) Escritura atómica a temp
+            var tmpPath = outPath + ".tmp";
+            using (var w = new StreamWriter(tmpPath, false, Encoding.UTF8))
             {
-                w.WriteLine($"### {f}\n");
-                w.WriteLine(File.ReadAllText(f));
-                w.WriteLine("\n-----\n");
-                tree.Add(PathHelpers.GetRelativePath(baseFolder, f));
+                var tree = new List<string>();
+                foreach (var f in files)
+                {
+                    w.WriteLine($"### {f}\n");
+
+                    // Si falla la lectura, simplemente lo anotamos y seguimos
+                    try
+                    {
+                        w.WriteLine(File.ReadAllText(f));
+                    }
+                    catch (IOException)
+                    {
+                        w.WriteLine($"// SKIPPED (locked): {f}");
+                    }
+
+                    w.WriteLine("\n-----\n");
+                    tree.Add(PathHelpers.GetRelativePath(baseFolder, f));
+                }
+
+                w.WriteLine("### Árbol:");
+                foreach (var line in tree)
+                    w.WriteLine(line);
             }
-            w.WriteLine("### Árbol:");
-            foreach (var line in tree)
-                w.WriteLine(line);
+
+            // 3) Reemplazo seguro
+            File.Delete(outPath);
+            File.Move(tmpPath, outPath);
         }
     }
 }
@@ -287,13 +477,18 @@ namespace GenrateAIContext
     <Compile Include="WindowWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".contextconfig.json" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
       <Generator>VsixManifestGenerator</Generator>
       <LastGenOutput>source.extension.cs</LastGenOutput>
     </None>
     <Content Include="Resources\Icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\GenerateIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -310,6 +505,9 @@ namespace GenrateAIContext
     <Reference Include="System.Design" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <!-- ← Añadido -->
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Community.VisualStudio.VSCT" Version="16.0.29.6" PrivateAssets="all" />
@@ -318,13 +516,6 @@ namespace GenrateAIContext
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
 
 -----
@@ -418,10 +609,13 @@ namespace GenrateAIContext
 
 <?xml version="1.0" encoding="utf-8"?>
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
+
+	<!-- 1) Referencias internas de Visual Studio -->
 	<Extern href="stdidcmd.h"/>
 	<Extern href="vsshlids.h"/>
 	<Include href="KnownImageIds.vsct"/>
 
+	<!-- 2) Comandos, grupos y botones -->
 	<Commands package="GenrateAIContext">
 		<Groups>
 			<Group guid="GenrateAIContext" id="MyMenuGroup" priority="0x0600">
@@ -431,7 +625,10 @@ namespace GenrateAIContext
 		<Buttons>
 			<Button guid="GenrateAIContext" id="MyCommand" priority="0x0100" type="Button">
 				<Parent guid="GenrateAIContext" id="MyMenuGroup"/>
-				<Icon guid="ImageCatalogGuid" id="StatusInformation"/>
+
+				<!-- Aquí referenciamos el icono definido más abajo -->
+				<Icon guid="GenrateAIContext" id="GenerateIcon"/>
+
 				<Strings>
 					<ButtonText>Generar Contexto IA…</ButtonText>
 					<LocCanonicalName>.GenrateAIContext.MyCommand</LocCanonicalName>
@@ -440,18 +637,25 @@ namespace GenrateAIContext
 		</Buttons>
 	</Commands>
 
+	<!-- 3) Dónde aparece en el menú -->
 	<CommandPlacements>
 		<CommandPlacement guid="GenrateAIContext" id="MyCommand" priority="0x0100">
 			<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
 		</CommandPlacement>
 	</CommandPlacements>
 
+	<!-- 4) Símbolos e imágenes -->
 	<Symbols>
 		<GuidSymbol name="GenrateAIContext" value="{c27c8469-d722-43f4-8fcf-2d130fb5a0ac}">
-			<IDSymbol name="MyMenuGroup" value="0x0001"/>
-			<IDSymbol name="MyCommand"     value="0x0100"/>
+			<IDSymbol name="MyMenuGroup"  value="0x0001"/>
+			<IDSymbol name="MyCommand"    value="0x0100"/>
+			<IDSymbol name="GenerateIcon" value="0x0101"/>
+
+			<!-- Definimos aquí la imagen PNG -->
+	
 		</GuidSymbol>
 	</Symbols>
+
 </CommandTable>
 
 
@@ -506,14 +710,6 @@ namespace System.Runtime.CompilerServices
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\Resources\Icon.png
-
-�PNG
-
-   IHDR   Z   Z   v�0   'PLTEBBB������YYY���������mmm���ppp���SSSEEEj�K'   �IDATx�����PD����v�Vo]�p�\,�k�NQ��N�r�T��V�A��u�2me-�;t4��sg~������O���ȏ�� �+Ӡ�}������|4h��H������4h���h�n�4�hZ{���I��/M�4h�x1�?`�C� ?�1)��    IEND�B`�
-
------
-
 ### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\source.extension.cs
 
 // ------------------------------------------------------------------------------
@@ -544,54 +740,54 @@ namespace GenrateAIContext
 <PackageManifest Version="2.0.0"
                  xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="kikelodeon.GenerateAIContext"
-              Version="1.6.0"
-              Language="en-US"
-              Publisher="kikelodeon" />
-    <DisplayName>Generate AI Context</DisplayName>
-    <Description xml:space="preserve">
+    <Metadata>
+        <Identity Id="kikelodeon.GenerateAIContext"
+                  Version="2.0"
+                  Language="en-US"
+                  Publisher="kikelodeon" />
+        <DisplayName>Generate AI Context</DisplayName>
+        <Description xml:space="preserve">
       Generates a text file containing the entire project context (code and config),
       with support for folder-and-extension exclusions via .contextconfig.json.
     </Description>
-    <Icon>Resources\Icon.png</Icon>
-    <PreviewImage>Resources\Preview.png</PreviewImage>
-    <Tags>context,project,vsix</Tags>
-    <MoreInfoUrl>https://github.com/kikelodeon/GenerateAIContext</MoreInfoUrl>
-  </Metadata>
+        <Icon>Resources\Icon.png</Icon>
+        <PreviewImage>Resources\Preview.png</PreviewImage>
+        <Tags>context,project,vsix</Tags>
+        <MoreInfoUrl>https://github.com/kikelodeon/GenerateAIContext</MoreInfoUrl>
+    </Metadata>
 
-  <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community"
-                        Version="[17.0,18.0)">
-      <ProductArchitecture>amd64</ProductArchitecture>
-    </InstallationTarget>
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro"
-                        Version="[17.0,18.0)">
-      <ProductArchitecture>amd64</ProductArchitecture>
-    </InstallationTarget>
-    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise"
-                        Version="[17.0,18.0)">
-      <ProductArchitecture>amd64</ProductArchitecture>
-    </InstallationTarget>
-  </Installation>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community"
+                            Version="[17.0,18.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro"
+                            Version="[17.0,18.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Id="Microsoft.VisualStudio.Enterprise"
+                            Version="[17.0,18.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+    </Installation>
 
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" />
-    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.Compiler" Version="[4.0,)" />
-  </Prerequisites>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.Compiler" Version="[4.0,)" />
+    </Prerequisites>
 
-  <Assets>
-<Asset Type="Microsoft.VisualStudio.VsPackage"
-       d:Source="Project"
-       d:ProjectName="%CurrentProject%"
-       Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-<Asset Type="Microsoft.VisualStudio.Menus"
-       d:Source="File"
-       Path="Menus.ctmenu.vsct" />
-    <Asset Type="Microsoft.VisualStudio.Icon"
-           d:Source="File"
-           Path="Resources\Icon.png" />
-  </Assets>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage"
+               d:Source="Project"
+               d:ProjectName="%CurrentProject%"
+               Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.Menus"
+               d:Source="File"
+               Path="Menus.ctmenu.vsct" />
+        <Asset Type="Microsoft.VisualStudio.Icon"
+               d:Source="File"
+               Path="Resources\Icon.png" />
+    </Assets>
 </PackageManifest>
 
 
@@ -616,6 +812,7 @@ namespace GenrateAIContext
 -----
 
 ### Árbol:
+.contextconfig.json
 GenrateAIContext.sln
 GenrateAIContext\.contextconfig.json
 GenrateAIContext\ConfigForm.cs
@@ -628,7 +825,6 @@ GenrateAIContext\Menus.ctmenu.cs
 GenrateAIContext\Menus.ctmenu.vsct
 GenrateAIContext\PathHelpers.cs
 GenrateAIContext\Properties\AssemblyInfo.cs
-GenrateAIContext\Resources\Icon.png
 GenrateAIContext\source.extension.cs
 GenrateAIContext\source.extension.vsixmanifest
 GenrateAIContext\WindowWrapper.cs
