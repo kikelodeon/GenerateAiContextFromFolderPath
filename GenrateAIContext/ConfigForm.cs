@@ -1,18 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json;
 
 namespace GenrateAIContext
 {
     public class ConfigForm : Form
     {
         private TextBox txtRoot;
-        private ListBox lstExcludedFolders;
-        private ListBox lstExcludedExts;
         private TextBox txtOutput;
         private Button btnGenerate;
         private Button btnCancel;
@@ -22,23 +17,23 @@ namespace GenrateAIContext
             // Form básico
             Text = "Configurar Generar Contexto IA";
             StartPosition = FormStartPosition.CenterParent;
-            ClientSize = new Size(600, 480);
+            ClientSize = new Size(600, 200);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
 
-            // Panel principal con tabla
+            // Panel principal
             var main = new TableLayoutPanel
             {
                 Dock = DockStyle.Top,
                 AutoSize = true,
                 ColumnCount = 3,
-                RowCount = 4,
+                RowCount = 2,
                 Padding = new Padding(10),
             };
-            main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));      // etiqueta
-            main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); // control
-            main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));      // botón
+            main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            main.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 
             // Fila 0: Carpeta raíz
             main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -54,67 +49,13 @@ namespace GenrateAIContext
                     txtRoot.Text = dlg.SelectedPath;
             };
 
-            // Fila 1: Excluir carpetas
+            // Fila 1: Archivo de salida
             main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            main.Controls.Add(new Label { Text = "Excluir carpetas:", Anchor = AnchorStyles.Right, AutoSize = true }, 0, 1);
-            lstExcludedFolders = new ListBox { Height = 100, Dock = DockStyle.Fill };
-            var pnlFolderBtns = new FlowLayoutPanel { FlowDirection = FlowDirection.TopDown, AutoSize = true };
-            var btnAddFolder = new Button { Text = "+", AutoSize = true };
-            var btnRemoveFolder = new Button { Text = "–", AutoSize = true };
-            pnlFolderBtns.Controls.AddRange(new Control[] { btnAddFolder, btnRemoveFolder });
-            main.Controls.Add(lstExcludedFolders, 1, 1);
-            main.Controls.Add(pnlFolderBtns, 2, 1);
-            btnAddFolder.Click += (_, __) =>
-            {
-                using var dlg = new FolderBrowserDialog { SelectedPath = txtRoot.Text };
-                if (dlg.ShowDialog() == DialogResult.OK)
-                {
-                    var rel = PathHelpers.GetRelativePath(txtRoot.Text, dlg.SelectedPath);
-                    if (!lstExcludedFolders.Items.Contains(rel))
-                        lstExcludedFolders.Items.Add(rel);
-                }
-            };
-            btnRemoveFolder.Click += (_, __) =>
-            {
-                if (lstExcludedFolders.SelectedItem != null)
-                    lstExcludedFolders.Items.Remove(lstExcludedFolders.SelectedItem);
-            };
-
-            // Fila 2: Excluir extensiones
-            main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            main.Controls.Add(new Label { Text = "Excluir extensiones:", Anchor = AnchorStyles.Right, AutoSize = true }, 0, 2);
-            lstExcludedExts = new ListBox { Height = 100, Dock = DockStyle.Fill };
-            var pnlExtBtns = new FlowLayoutPanel { FlowDirection = FlowDirection.TopDown, AutoSize = true };
-            var btnAddExt = new Button { Text = "+", AutoSize = true };
-            var btnRemoveExt = new Button { Text = "–", AutoSize = true };
-            pnlExtBtns.Controls.AddRange(new Control[] { btnAddExt, btnRemoveExt });
-            main.Controls.Add(lstExcludedExts, 1, 2);
-            main.Controls.Add(pnlExtBtns, 2, 2);
-            btnAddExt.Click += (_, __) =>
-            {
-                var ext = Interaction.InputBox(
-                    "Extensión (incluye el punto):", "Agregar Extensión", ".log"
-                ).Trim();
-                if (!string.IsNullOrEmpty(ext))
-                {
-                    if (!ext.StartsWith(".")) ext = "." + ext;
-                    if (!lstExcludedExts.Items.Contains(ext))
-                        lstExcludedExts.Items.Add(ext);
-                }
-            };
-            btnRemoveExt.Click += (_, __) =>
-            {
-                if (lstExcludedExts.SelectedItem != null)
-                    lstExcludedExts.Items.Remove(lstExcludedExts.SelectedItem);
-            };
-
-            // Fila 3: Archivo de salida
-            main.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            main.Controls.Add(new Label { Text = "Archivo salida:", Anchor = AnchorStyles.Right, AutoSize = true }, 0, 3);
+            main.Controls.Add(new Label { Text = "Archivo salida:", Anchor = AnchorStyles.Right, AutoSize = true }, 0, 1);
             txtOutput = new TextBox { Dock = DockStyle.Fill };
             var btnBrowseOut = new Button { Text = "...", AutoSize = true };
-            main.Controls.Add(txtOutput, 1, 3);
-            main.Controls.Add(btnBrowseOut, 2, 3);
+            main.Controls.Add(txtOutput, 1, 1);
+            main.Controls.Add(btnBrowseOut, 2, 1);
             btnBrowseOut.Click += (_, __) =>
             {
                 using var dlg = new SaveFileDialog
@@ -144,12 +85,8 @@ namespace GenrateAIContext
             bottom.Controls.Add(btnGenerate);
             Controls.Add(bottom);
 
-            // Cargo configuración inicial (o valores por defecto)
+            // Cargar valores iniciales
             txtRoot.Text = initialRoot;
-            new[] { "bin", "obj", ".git", ".vs", "TestData" }
-                .ToList().ForEach(f => lstExcludedFolders.Items.Add(f));
-            new[] { ".exe", ".dll", ".pdb", ".png", ".jpg", ".user", ".suo" }
-                .ToList().ForEach(e => lstExcludedExts.Items.Add(e));
             txtOutput.Text = "AIContext.txt";
         }
 
@@ -162,14 +99,17 @@ namespace GenrateAIContext
                 return;
             }
 
-            var exFolders = lstExcludedFolders.Items.OfType<string>().ToArray();
-            var exExts = lstExcludedExts.Items.OfType<string>().ToArray();
-            var outFile = txtOutput.Text.Trim();
+            var outputFile = txtOutput.Text.Trim();
+            if (string.IsNullOrWhiteSpace(outputFile))
+            {
+                MessageBox.Show("Especifique un nombre para el archivo de salida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-            // Genero el contexto
-            ContextGenerator.GenerateContext(root, exFolders, exExts, outFile);
+            // Sin exclusiones manuales, solo usa .aiignore
+            ContextGenerator.GenerateContext(root, Array.Empty<string>(), Array.Empty<string>(), outputFile);
 
-            MessageBox.Show($"Contexto generado en:\n{Path.Combine(root, outFile)}",
+            MessageBox.Show($"Contexto generado en:\n{Path.Combine(root, outputFile)}",
                             "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
         }

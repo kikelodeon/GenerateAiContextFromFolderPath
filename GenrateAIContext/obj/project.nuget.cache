@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "n55yuMq5pP4=",
+  "dgSpecHash": "y/STFzAkEWk=",
   "success": true,
-  "projectFilePath": "C:\\Users\\kikelo\\source\\repos\\GenrateAIContext\\GenrateAIContext\\GenrateAIContext.csproj",
+  "projectFilePath": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\GenrateAIContext.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kikelo\\.nuget\\packages\\community.visualstudio.toolkit.17\\17.0.451\\community.visualstudio.toolkit.17.17.0.451.nupkg.sha512",
     "C:\\Users\\kikelo\\.nuget\\packages\\community.visualstudio.toolkit.analyzers\\1.0.451\\community.visualstudio.toolkit.analyzers.1.0.451.nupkg.sha512",
@@ -17,6 +17,7 @@
     "C:\\Users\\kikelo\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\5.0.0\\microsoft.bcl.asyncinterfaces.5.0.0.nupkg.sha512",
     "C:\\Users\\kikelo\\.nuget\\packages\\microsoft.build.framework\\16.5.0\\microsoft.build.framework.16.5.0.nupkg.sha512",
     "C:\\Users\\kikelo\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\kikelo\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\9.0.6\\microsoft.extensions.filesystemglobbing.9.0.6.nupkg.sha512",
     "C:\\Users\\kikelo\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.1\\microsoft.netcore.platforms.1.1.1.nupkg.sha512",
     "C:\\Users\\kikelo\\.nuget\\packages\\microsoft.netcore.targets\\1.1.3\\microsoft.netcore.targets.1.1.3.nupkg.sha512",
     "C:\\Users\\kikelo\\.nuget\\packages\\microsoft.servicehub.analyzers\\3.0.3078\\microsoft.servicehub.analyzers.3.0.3078.nupkg.sha512",

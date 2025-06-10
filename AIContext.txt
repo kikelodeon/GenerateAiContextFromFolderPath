@@ -1,28 +1,18 @@
-﻿### C:\Users\kikelo\source\repos\GenrateAIContext\.contextconfig.json
+﻿### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\.gitignore
 
-{
-  "ExcludedFolders": [
-    "bin",
-    "obj",
-    ".git",
-    ".vs",
-    "TestData"
-  ],
-  "ExcludedExtensions": [
-    ".exe",
-    ".dll",
-    ".pdb",
-    ".png",
-    ".jpg",
-    ".user",
-    ".suo"
-  ],
-  "OutputFileName": "AIContext.txt"
-}
+# Ignore bin and obj folders
+**/bin/
+**/obj/
+# Ignore Production properties
+**/Properties/Production/
+
+# Frontend
+/_Frontend/kronoscape.net/node_modules
+/_Frontend/kronoscape.net/build
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext.sln
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext.sln
 
 
 Microsoft Visual Studio Solution File, Format Version 12.00
@@ -65,18 +55,7 @@ EndGlobal
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\.contextconfig.json
-
-{
-  "excludedFolders": [ "bin", "obj", ".git", ".vs", "TestData" ],
-  "excludedExtensions": [ ".exe", ".dll", ".pdb", ".png", ".jpg", ".user", ".suo" ],
-  "outputFileName": "AIContext.txt"
-}
-
-
------
-
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\ConfigForm.cs
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\ConfigForm.cs
 
 using System;
 using System.IO;
@@ -226,28 +205,11 @@ namespace GenrateAIContext
 
             // Cargo configuración inicial (o valores por defecto)
             txtRoot.Text = initialRoot;
-            var cfgPath = Path.Combine(initialRoot, ".contextconfig.json");
-            if (File.Exists(cfgPath))
-            {
-                try
-                {
-                    var cfg = JsonConvert
-                        .DeserializeObject<ContextConfig>(File.ReadAllText(cfgPath))
-                        ?? new ContextConfig();
-                    lstExcludedFolders.Items.AddRange(cfg.ExcludedFolders);
-                    lstExcludedExts.Items.AddRange(cfg.ExcludedExtensions);
-                    txtOutput.Text = cfg.OutputFileName;
-                }
-                catch { }
-            }
-            else
-            {
-                new[] { "bin", "obj", ".git", ".vs", "TestData" }
-                    .ToList().ForEach(f => lstExcludedFolders.Items.Add(f));
-                new[] { ".exe", ".dll", ".pdb", ".png", ".jpg", ".user", ".suo" }
-                    .ToList().ForEach(e => lstExcludedExts.Items.Add(e));
-                txtOutput.Text = "AIContext.txt";
-            }
+            new[] { "bin", "obj", ".git", ".vs", "TestData" }
+                .ToList().ForEach(f => lstExcludedFolders.Items.Add(f));
+            new[] { ".exe", ".dll", ".pdb", ".png", ".jpg", ".user", ".suo" }
+                .ToList().ForEach(e => lstExcludedExts.Items.Add(e));
+            txtOutput.Text = "AIContext.txt";
         }
 
         private void Generate_Click(object sender, EventArgs e)
@@ -263,18 +225,6 @@ namespace GenrateAIContext
             var exExts = lstExcludedExts.Items.OfType<string>().ToArray();
             var outFile = txtOutput.Text.Trim();
 
-            // Guardo la configuración
-            var cfg = new ContextConfig
-            {
-                ExcludedFolders = exFolders,
-                ExcludedExtensions = exExts,
-                OutputFileName = outFile
-            };
-            File.WriteAllText(
-                Path.Combine(root, ".contextconfig.json"),
-                JsonConvert.SerializeObject(cfg, Formatting.Indented)
-            );
-
             // Genero el contexto
             ContextGenerator.GenerateContext(root, exFolders, exExts, outFile);
 
@@ -288,47 +238,7 @@ namespace GenrateAIContext
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\ContextConfig.cs
-
-using System;
-
-namespace GenrateAIContext
-{
-    public class ContextConfig
-    {
-        public string[] ExcludedFolders { get; set; } = Array.Empty<string>();
-        public string[] ExcludedExtensions { get; set; } = Array.Empty<string>();
-        public string OutputFileName { get; set; } = "ProjectContext.txt";
-    }
-}
-
-
------
-
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\ContextConfigLoader.cs
-
-using System.IO;
-using Newtonsoft.Json;
-
-namespace GenrateAIContext
-{
-    public static class ContextConfigLoader
-    {
-        public static ContextConfig LoadConfig(string baseFolder)
-        {
-            var cfg = Path.Combine(baseFolder, ".contextconfig.json");
-            if (File.Exists(cfg))
-                return JsonConvert.DeserializeObject<ContextConfig>(File.ReadAllText(cfg))
-                       ?? new ContextConfig();
-            return new ContextConfig();
-        }
-    }
-}
-
-
------
-
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\ContextGenerator.cs
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\ContextGenerator.cs
 
 using System;
 using System.Collections.Generic;
@@ -406,7 +316,7 @@ namespace GenrateAIContext
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\GenrateAIContext.csproj
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\GenrateAIContext.csproj
 
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -458,8 +368,6 @@ namespace GenrateAIContext
     <Compile Include="ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ContextConfig.cs" />
-    <Compile Include="ContextConfigLoader.cs" />
     <Compile Include="PathHelpers.cs" />
     <Compile Include="ContextGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -520,7 +428,7 @@ namespace GenrateAIContext
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\GenrateAIContextPackage.cs
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\GenrateAIContextPackage.cs
 
 using System;
 using System.IO;
@@ -574,7 +482,7 @@ namespace GenrateAIContext
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\Menus.ctmenu.cs
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\Menus.ctmenu.cs
 
 // ------------------------------------------------------------------------------
 // <auto-generated>
@@ -605,7 +513,7 @@ namespace GenrateAIContext
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\Menus.ctmenu.vsct
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\Menus.ctmenu.vsct
 
 <?xml version="1.0" encoding="utf-8"?>
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
@@ -661,7 +569,7 @@ namespace GenrateAIContext
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\PathHelpers.cs
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\PathHelpers.cs
 
 using System;
 using System.IO;
@@ -683,7 +591,7 @@ namespace GenrateAIContext
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\Properties\AssemblyInfo.cs
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\Properties\AssemblyInfo.cs
 
 using GenrateAIContext;
 using System.Reflection;
@@ -710,7 +618,7 @@ namespace System.Runtime.CompilerServices
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\source.extension.cs
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\source.extension.cs
 
 // ------------------------------------------------------------------------------
 // <auto-generated>
@@ -734,66 +642,66 @@ namespace GenrateAIContext
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\source.extension.vsixmanifest
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\source.extension.vsixmanifest
 
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0"
                  xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-    <Metadata>
-        <Identity Id="kikelodeon.GenerateAIContext"
-                  Version="2.0"
+	<Metadata>
+		<Identity Id="kikelodeon.GenerateAIContext"
+                  Version="3.0"
                   Language="en-US"
                   Publisher="kikelodeon" />
-        <DisplayName>Generate AI Context</DisplayName>
-        <Description xml:space="preserve">
+		<DisplayName>Generate AI Context</DisplayName>
+		<Description xml:space="preserve">
       Generates a text file containing the entire project context (code and config),
       with support for folder-and-extension exclusions via .contextconfig.json.
     </Description>
-        <Icon>Resources\Icon.png</Icon>
-        <PreviewImage>Resources\Preview.png</PreviewImage>
-        <Tags>context,project,vsix</Tags>
-        <MoreInfoUrl>https://github.com/kikelodeon/GenerateAIContext</MoreInfoUrl>
-    </Metadata>
+		<Icon>Resources\Icon.png</Icon>
+		<PreviewImage>Resources\Preview.png</PreviewImage>
+		<Tags>context,project,vsix</Tags>
+		<MoreInfoUrl>https://github.com/kikelodeon/GenerateAIContext</MoreInfoUrl>
+	</Metadata>
 
-    <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community"
+	<Installation>
+		<InstallationTarget Id="Microsoft.VisualStudio.Community"
                             Version="[17.0,18.0)">
-            <ProductArchitecture>amd64</ProductArchitecture>
-        </InstallationTarget>
-        <InstallationTarget Id="Microsoft.VisualStudio.Pro"
+			<ProductArchitecture>amd64</ProductArchitecture>
+		</InstallationTarget>
+		<InstallationTarget Id="Microsoft.VisualStudio.Pro"
                             Version="[17.0,18.0)">
-            <ProductArchitecture>amd64</ProductArchitecture>
-        </InstallationTarget>
-        <InstallationTarget Id="Microsoft.VisualStudio.Enterprise"
+			<ProductArchitecture>amd64</ProductArchitecture>
+		</InstallationTarget>
+		<InstallationTarget Id="Microsoft.VisualStudio.Enterprise"
                             Version="[17.0,18.0)">
-            <ProductArchitecture>amd64</ProductArchitecture>
-        </InstallationTarget>
-    </Installation>
+			<ProductArchitecture>amd64</ProductArchitecture>
+		</InstallationTarget>
+	</Installation>
 
-    <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" />
-        <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.Compiler" Version="[4.0,)" />
-    </Prerequisites>
+	<Prerequisites>
+		<Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" />
+		<Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.Compiler" Version="[4.0,)" />
+	</Prerequisites>
 
-    <Assets>
-        <Asset Type="Microsoft.VisualStudio.VsPackage"
+	<Assets>
+		<Asset Type="Microsoft.VisualStudio.VsPackage"
                d:Source="Project"
                d:ProjectName="%CurrentProject%"
                Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-        <Asset Type="Microsoft.VisualStudio.Menus"
+		<Asset Type="Microsoft.VisualStudio.Menus"
                d:Source="File"
                Path="Menus.ctmenu.vsct" />
-        <Asset Type="Microsoft.VisualStudio.Icon"
+		<Asset Type="Microsoft.VisualStudio.Icon"
                d:Source="File"
                Path="Resources\Icon.png" />
-    </Assets>
+	</Assets>
 </PackageManifest>
 
 
 -----
 
-### C:\Users\kikelo\source\repos\GenrateAIContext\GenrateAIContext\WindowWrapper.cs
+### C:\Users\kikelo\Documents\GitHub\GenerateAiContextFromFolderPath\GenrateAIContext\WindowWrapper.cs
 
 using System;
 using System.Windows.Forms;
@@ -812,12 +720,9 @@ namespace GenrateAIContext
 -----
 
 ### Árbol:
-.contextconfig.json
+.gitignore
 GenrateAIContext.sln
-GenrateAIContext\.contextconfig.json
 GenrateAIContext\ConfigForm.cs
-GenrateAIContext\ContextConfig.cs
-GenrateAIContext\ContextConfigLoader.cs
 GenrateAIContext\ContextGenerator.cs
 GenrateAIContext\GenrateAIContext.csproj
 GenrateAIContext\GenrateAIContextPackage.cs

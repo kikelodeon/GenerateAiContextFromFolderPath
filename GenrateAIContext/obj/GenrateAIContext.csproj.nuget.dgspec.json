@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kikelo\\source\\repos\\GenrateAIContext\\GenrateAIContext\\GenrateAIContext.csproj": {}
+    "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\GenrateAIContext.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kikelo\\source\\repos\\GenrateAIContext\\GenrateAIContext\\GenrateAIContext.csproj": {
+    "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\GenrateAIContext.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kikelo\\source\\repos\\GenrateAIContext\\GenrateAIContext\\GenrateAIContext.csproj",
+        "projectUniqueName": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\GenrateAIContext.csproj",
         "projectName": "GenrateAIContext",
-        "projectPath": "C:\\Users\\kikelo\\source\\repos\\GenrateAIContext\\GenrateAIContext\\GenrateAIContext.csproj",
+        "projectPath": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\GenrateAIContext.csproj",
         "packagesPath": "C:\\Users\\kikelo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kikelo\\source\\repos\\GenrateAIContext\\GenrateAIContext\\obj\\",
+        "outputPath": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "UsingMicrosoftNETSdk": false,
@@ -53,6 +53,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[16.0.29.6, )"
+            },
+            "Microsoft.Extensions.FileSystemGlobbing": {
+              "target": "Package",
+              "version": "[9.0.6, )"
             },
             "Microsoft.VSSDK.BuildTools": {
               "target": "Package",

@@ -1,0 +1,121 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|c:\\users\\kikelo\\documents\\github\\generateaicontextfromfolderpath\\genrateaicontext\\contextgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|solutionrelative:genrateaicontext\\contextgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|c:\\users\\kikelo\\documents\\github\\generateaicontextfromfolderpath\\genrateaicontext\\aiignoreparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|solutionrelative:genrateaicontext\\aiignoreparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|c:\\users\\kikelo\\documents\\github\\generateaicontextfromfolderpath\\genrateaicontext\\configform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|solutionrelative:genrateaicontext\\configform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|c:\\users\\kikelo\\documents\\github\\generateaicontextfromfolderpath\\genrateaicontext\\genrateaicontextpackage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|solutionrelative:genrateaicontext\\genrateaicontextpackage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|c:\\users\\kikelo\\documents\\github\\generateaicontextfromfolderpath\\genrateaicontext\\configform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|solutionrelative:genrateaicontext\\configform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|c:\\users\\kikelo\\documents\\github\\generateaicontextfromfolderpath\\genrateaicontext\\menus.ctmenu.vsct||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{F81F2EF6-E8A8-492C-8AD1-1EB7828B8ADD}|GenrateAIContext\\GenrateAIContext.csproj|solutionrelative:genrateaicontext\\menus.ctmenu.vsct||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Menus.ctmenu.vsct",
+              "DocumentMoniker": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\Menus.ctmenu.vsct",
+              "RelativeDocumentMoniker": "GenrateAIContext\\Menus.ctmenu.vsct",
+              "ToolTip": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\Menus.ctmenu.vsct",
+              "RelativeToolTip": "GenrateAIContext\\Menus.ctmenu.vsct",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003464|",
+              "WhenOpened": "2025-06-10T21:42:31.415Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GenrateAIContextPackage.cs",
+              "DocumentMoniker": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\GenrateAIContextPackage.cs",
+              "RelativeDocumentMoniker": "GenrateAIContext\\GenrateAIContextPackage.cs",
+              "ToolTip": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\GenrateAIContextPackage.cs",
+              "RelativeToolTip": "GenrateAIContext\\GenrateAIContextPackage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T21:42:29.282Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ContextGenerator.cs",
+              "DocumentMoniker": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\ContextGenerator.cs",
+              "RelativeDocumentMoniker": "GenrateAIContext\\ContextGenerator.cs",
+              "ToolTip": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\ContextGenerator.cs",
+              "RelativeToolTip": "GenrateAIContext\\ContextGenerator.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAgwDMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T21:42:27.623Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ConfigForm.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\ConfigForm.cs",
+              "RelativeDocumentMoniker": "GenrateAIContext\\ConfigForm.cs",
+              "ToolTip": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\ConfigForm.cs [Dise\u00F1o]",
+              "RelativeToolTip": "GenrateAIContext\\ConfigForm.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T21:43:08.626Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ConfigForm.cs",
+              "DocumentMoniker": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\ConfigForm.cs",
+              "RelativeDocumentMoniker": "GenrateAIContext\\ConfigForm.cs",
+              "ToolTip": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\ConfigForm.cs",
+              "RelativeToolTip": "GenrateAIContext\\ConfigForm.cs",
+              "ViewState": "AgIAAFMAAAAAAAAAAAArwGsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T21:43:10.941Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AiIgnoreParser.cs",
+              "DocumentMoniker": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\AiIgnoreParser.cs",
+              "RelativeDocumentMoniker": "GenrateAIContext\\AiIgnoreParser.cs",
+              "ToolTip": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\AiIgnoreParser.cs",
+              "RelativeToolTip": "GenrateAIContext\\AiIgnoreParser.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAADwv0QAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T21:39:15.214Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

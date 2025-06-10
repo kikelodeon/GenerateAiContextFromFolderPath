@@ -193,6 +193,22 @@
           "lib/net45/_._": {}
         }
       },
+      "Microsoft.Extensions.FileSystemGlobbing/9.0.6": {
+        "type": "package",
+        "compile": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net462/_._": {}
+        }
+      },
       "Microsoft.NETCore.Platforms/1.1.1": {
         "type": "package",
         "compile": {
@@ -2229,6 +2245,22 @@
           "lib/net45/_._": {}
         }
       },
+      "Microsoft.Extensions.FileSystemGlobbing/9.0.6": {
+        "type": "package",
+        "compile": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net462/_._": {}
+        }
+      },
       "Microsoft.NETCore.Platforms/1.1.1": {
         "type": "package",
         "compile": {
@@ -4253,6 +4285,22 @@
           "lib/net45/_._": {}
         }
       },
+      "Microsoft.Extensions.FileSystemGlobbing/9.0.6": {
+        "type": "package",
+        "compile": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net462/_._": {}
+        }
+      },
       "Microsoft.NETCore.Platforms/1.1.1": {
         "type": "package",
         "compile": {
@@ -6239,6 +6287,22 @@
         },
         "runtime": {
           "lib/net45/_._": {}
+        }
+      },
+      "Microsoft.Extensions.FileSystemGlobbing/9.0.6": {
+        "type": "package",
+        "compile": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net462/_._": {}
         }
       },
       "Microsoft.NETCore.Platforms/1.1.1": {
@@ -8263,6 +8327,22 @@
         },
         "runtime": {
           "lib/net45/_._": {}
+        }
+      },
+      "Microsoft.Extensions.FileSystemGlobbing/9.0.6": {
+        "type": "package",
+        "compile": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net462/_._": {}
         }
       },
       "Microsoft.NETCore.Platforms/1.1.1": {
@@ -10411,6 +10491,34 @@
         "ref/xamarinwatchos10/_._",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "Microsoft.Extensions.FileSystemGlobbing/9.0.6": {
+      "sha512": "1HJCAbwukNEoYbHgHbKHmenU0V/0huw8+i7Qtf5rLUG1E+3kEwRJQxpwD3wbTEagIgPSQisNgJTvmUX9yYVc6g==",
+      "type": "package",
+      "path": "microsoft.extensions.filesystemglobbing/9.0.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.FileSystemGlobbing.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.FileSystemGlobbing.targets",
+        "lib/net462/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "lib/net462/Microsoft.Extensions.FileSystemGlobbing.xml",
+        "lib/net8.0/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "lib/net8.0/Microsoft.Extensions.FileSystemGlobbing.xml",
+        "lib/net9.0/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "lib/net9.0/Microsoft.Extensions.FileSystemGlobbing.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.xml",
+        "microsoft.extensions.filesystemglobbing.9.0.6.nupkg.sha512",
+        "microsoft.extensions.filesystemglobbing.nuspec",
+        "useSharedDesignerContext.txt"
       ]
     },
     "Microsoft.NETCore.Platforms/1.1.1": {
@@ -13529,6 +13637,7 @@
     ".NETFramework,Version=v4.8": [
       "Community.VisualStudio.Toolkit.17 >= 17.0.451",
       "Community.VisualStudio.VSCT >= 16.0.29.6",
+      "Microsoft.Extensions.FileSystemGlobbing >= 9.0.6",
       "Microsoft.VSSDK.BuildTools >= 17.0.5232"
     ]
   },
@@ -13539,11 +13648,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kikelo\\source\\repos\\GenrateAIContext\\GenrateAIContext\\GenrateAIContext.csproj",
+      "projectUniqueName": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\GenrateAIContext.csproj",
       "projectName": "GenrateAIContext",
-      "projectPath": "C:\\Users\\kikelo\\source\\repos\\GenrateAIContext\\GenrateAIContext\\GenrateAIContext.csproj",
+      "projectPath": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\GenrateAIContext.csproj",
       "packagesPath": "C:\\Users\\kikelo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kikelo\\source\\repos\\GenrateAIContext\\GenrateAIContext\\obj\\",
+      "outputPath": "C:\\Users\\kikelo\\Documents\\GitHub\\GenerateAiContextFromFolderPath\\GenrateAIContext\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "UsingMicrosoftNETSdk": false,
@@ -13585,6 +13694,10 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[16.0.29.6, )"
+          },
+          "Microsoft.Extensions.FileSystemGlobbing": {
+            "target": "Package",
+            "version": "[9.0.6, )"
           },
           "Microsoft.VSSDK.BuildTools": {
             "target": "Package",
